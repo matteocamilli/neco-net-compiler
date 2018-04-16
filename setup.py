@@ -36,7 +36,7 @@ def create_local_symlinks():
     silent_symlink('../neco/ctypes/ctypes.cpp',    'ctypes.cpp')
     os.chdir('..')
 
-std_paths = ['/usr', '/usr/', '/usr/local', '/usr/local/']
+std_paths = ['/usr', '/usr/', '/usr/local', '/usr/local/', '~/usr/']
 def has_non_std_prefix():
     for i, opt in enumerate(sys.argv):
         if opt.find('--prefix') == 0:
@@ -136,4 +136,3 @@ if prefix:
     print 'export NECO_INCLUDE={prefix}lib/python{py_version}/site-packages/neco/ctypes:{prefix}lib/python{py_version}/site-packages/neco/backends/python:{prefix}lib/python{py_version}/site-packages'.format(prefix=prefix, py_version=py_version)
     print 'export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$NECO_INCLUDE'
     print
-

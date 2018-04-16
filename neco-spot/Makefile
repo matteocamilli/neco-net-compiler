@@ -1,4 +1,5 @@
-SPOT_BASE?=/usr/local
+# set here your own spot directory
+SPOT_BASE?=/Users/matteocamilli/usr
 LIBS= -lpython2.7 -L$(SPOT_BASE)/lib -lspot -lbddx -lboost_program_options
 LIBPATHS=-L. -L/usr/local/lib -L$(SPOT_BASE)/lib -L../ctypes/
 INCLUDES= -I/usr/include/python2.7 -I$(SPOT_BASE)/include/
@@ -11,9 +12,9 @@ OBJS=main.o neco_model.o neco_state.o neco_succiter.o neco_tgba.o ctypes.o
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
-	CXXFLAGS = -ggdb -DNECO_TRACE -std=c++11
+	CXXFLAGS = -ggdb -DNECO_TRACE -std=c++14
 else
-	CXXFLAGS = -O3 -std=c++11
+	CXXFLAGS = -O3 -std=c++14
 endif
 
 all: $(OBJS)
