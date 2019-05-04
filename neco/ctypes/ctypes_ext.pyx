@@ -159,57 +159,52 @@ cdef class MultiSet:
         cdef list other_keys = other._data.keys()
         cdef int l1 = len(self_keys)
         cdef int l2 = len(other_keys)
-        cdef int i = 0
 
-        if l1 < l2:
-            return -1
-        elif l1 > l2:
-            return 1
+        cdef int p1 = 0
+        cdef int n1 = 0
+        cdef int p2 = 0
+        cdef int n2 = 0
 
-        # ensure we are working on sorted domain
         self_keys.sort()
         other_keys.sort()
 
         for 0 <= i < l1:
-            lkey = self_keys[i]
-            rkey = other_keys[i]
+            if self(self_keys[i]) < other(self_keys[i]):
+                n1 = 1
+                if n1 + p1 == 2:
+                    return -2
+            elif self(self_keys[i]) > other(self_keys[i]):
+                p1 = 1
+                if n1 + p1 == 2:
+                    return -2
 
-            if lkey.__class__ < rkey.__class__:
-                return -1
-            elif lkey.__class__ > rkey.__class__:
-                return 1
+        for 0 <= i < l2:
+            if self(other_keys[i]) < other(other_keys[i]):
+                n2 = 1
+                if n2 + p2 == 2:
+                    return -2
+            elif self(other_keys[i]) > other(other_keys[i]):
+                p2 = 1
+                if n2 + p2 == 2:
+                    return -2
 
-            if lkey < rkey:
-                return -1
-            elif lkey > rkey:
-                return 1
-
-        for 0 <= i < l1:
-            key = self_keys[i]
-            v1 = self._data[key]
-            v2 = other._data[key]
-            if v1.__class__ < v2.__class__:
-                return -1
-            elif v1.__class__ > v2.__class__:
-                return 1
-
-            if v1 < v2:
-                return -1
-            elif v1 > v2:
-                return 1
+        if p1 == 1:
+            return 1
+        elif n1 == 1:
+            return -1
 
         return 0
 
     def __richcmp__(MultiSet self, MultiSet other, int op):
         cdef int res = self.compare(other)
         if op == 0:
-            return res < 0
+            return res < 0 and res != -2
         elif op == 1:
-            return res <= 0
+            return res <= 0 and res != -2
         elif op == 2:
             return res == 0
         elif op == 3:
-            return res != 0
+            return res != 0 and res != -2
         elif op == 4:
             return res > 0
         elif op == 5:
